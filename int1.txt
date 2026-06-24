@@ -1,0 +1,78 @@
+
+	loadjsfile("Examiner.js");
+	loadjsfile("ExaminerDepartmentNomination.js");
+	loadjsfile("AppointExaminersMenu.js");
+	loadjsfile("AppointExaminersBOSRejectModification.js");
+	loadjsfile("ExaminerBOSRecommendation.js");
+	loadjsfile("RequestForFGSBoardRecommendation.js");
+	loadjsfile("RequestForSenateApproval.js");
+	loadjsfile("HandingOverThesisToFGSByStudent.js");
+	loadjsfile("SendingThesisToExaminers.js");
+	loadjsfile("AppointExaminersFGSRejectModification.js");
+	loadjsfile("AppointExaminersSenateRejectModification.js");
+	loadjsfile("ReceivingEvaluationReportFromExaminers.js");
+	loadjsfile("vivaBoard.js");
+	loadjsfile("ThesisSubmitMenu.js");
+	loadjsfile("Viva.js");
+	
+	
+		str += formAppointExaminers(dsp);
+		str += formAppointExaminersDeptNomination(dsp);
+		str += formAppointExaminersMenu(dsp);
+		str += formAppointExaminersBOSRejectModification(dsp);
+		str += formExaminerBOSRecommendation(dsp);
+		str += formRequestForFGSBoardRecommendation(dsp);
+		str += formRequestForSenateApproval(dsp);
+		str += formHandingOverThesisToFGSByStudent(dsp);
+		str += formSendingThesisToExaminers(dsp);
+		str += formAppointExaminersFGSRejectModification(dsp);
+		str += formAppointExaminersSenateRejectModification(dsp);
+		str += formReceivingEvaluationReportFromExaminers(dsp);
+		str += formVivaBoard(dsp);
+		str += formThesisSubmitMenu(dsp);
+		str += formViva(dsp);		
+		
+		
+		
+		 str += '<input type = "button" class ="btn2" value="Thesis Managment" onclick="showMenu('+"'formThesisSubmitMenu'"+');">';
+		
+		
+		//Appoint Examiner
+	$interfaceTbls["data4AppointExaminers"]=array("student","department" ,"faculty" ,"programmetype","payment","newcourseunit","degree");
+
+	//Appoint Examiner
+	$nextClientInterface["data4AppointExaminers"]="formAppointExaminers";
+	
+	//Appoint Examiner
+	
+	$getSQL["data4AppointExaminers"]="select distinct t1.universityCode, t1.studentNo ,t1.studentNIC,t1.studentName, t1.academicYear ,t1.studentPermanentAddress, t1.studentContactLand01, t1.studentContactMobile01 , t1.studentContactEmail,t1.batchNo,t1.degreeCode,t2.facultyTitle , t2.facultyCode , t3.departmentTitle , t3.departmentCode ,t4.programmeTypeTitle,t4.programmeTypeCode ,t5.degreeTitle from student as t1 left join faculty as t2 on t1.facultyCode= t2.facultyCode  left join department as t3 on  t1.departmentCode= t3.departmentCode and t1.facultyCode= t3.facultyCode  left join programmetype as t4 on t1.programmeTypeCode= t4.programmeTypeCode left join degree as t5 on t1.degreeCode= t5.degreeCode and t1.facultyCode=t5.facultyCode;";
+	
+	// Appoint Examiners XML StudentNo
+	
+					if(xml.getElementsByTagName("record")[i].getAttribute("studentNIC") != null && clientInterface == "formAppointExaminers"){
+//alert(xml.getElementsByTagName("record")[i].getAttribute("studentNIC"));
+				studentNoArr[studentNICLength] = xml.getElementsByTagName("record")[i].getAttribute("studentNo");
+				studentNameArr[studentNICLength] = xml.getElementsByTagName("record")[i].getAttribute("studentName");
+				studentNICArr[studentNICLength] = xml.getElementsByTagName("record")[i].getAttribute("studentNIC");
+				universityCodeArr[studentNICLength] = xml.getElementsByTagName("record")[i].getAttribute("universityCode");
+				facultyCodeArr[studentNICLength] = xml.getElementsByTagName("record")[i].getAttribute("facultyCode");
+				facultyTitleArr[studentNICLength] = xml.getElementsByTagName("record")[i].getAttribute("facultyTitle");
+				departmentCodeArr[studentNICLength] = xml.getElementsByTagName("record")[i].getAttribute("departmentCode");
+				departmentTitleArr[studentNICLength] = xml.getElementsByTagName("record")[i].getAttribute("departmentTitle");
+				programmeTypeCodeArr[studentNICLength] = xml.getElementsByTagName("record")[i].getAttribute("programmeTypeCode");
+				programmeTypeTitleArr[studentNICLength] = xml.getElementsByTagName("record")[i].getAttribute("programmeTypeTitle");
+				degreeCodeArr[studentNICLength] = xml.getElementsByTagName("record")[i].getAttribute("degreeCode");
+				degreeTitleArr[studentNICLength] = xml.getElementsByTagName("record")[i].getAttribute("degreeTitle"); 
+				academicYearArr[studentNICLength] = xml.getElementsByTagName("record")[i].getAttribute("academicYear");
+				batchNoArr[studentNICLength] = xml.getElementsByTagName("record")[i].getAttribute("batchNo");
+				
+				studentPermanentAddressArr[studentNICLength] = xml.getElementsByTagName("record")[i].getAttribute("studentPermanentAddress");
+				studentContactLanArr[studentNICLength] = xml.getElementsByTagName("record")[i].getAttribute("studentContactLand01");
+				studentContactMobileArr[studentNICLength] = xml.getElementsByTagName("record")[i].getAttribute("studentContactMobile01");
+				studentContactEmailArr[studentNICLength] = xml.getElementsByTagName("record")[i].getAttribute("studentContactEmail");
+				
+
+				studentNICLength++;
+				
+			}	
+			

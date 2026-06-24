@@ -1,0 +1,139 @@
+//final result confirm.js
+
+str += '<input type="button" class ="btnD" value="Print Certificate" onclick="printCertificatesFinal();">';
+
+function printCertificatesFinal(){
+	if(document.getElementById('selecteddegreeTitleFinal').selectedIndex != 0 
+	&& document.getElementById('academicYearFinal').value != ""
+	&& dataRep["finsemester"] != ""){	
+		dataRep["degCode"] = document.getElementById(document.getElementById('selecteddegreeTitleFinal').value).title;
+		dataRep["acYear"] = document.getElementById('academicYearFinal').value;
+		dataRep["degTitle"] = document.getElementById('selecteddegreeTitleFinal').value;
+		sendForm('data4printReport');
+		sendForm('data4finalExamResultsPrint');
+	}else{
+		alert('Select relevant fields');
+	}
+	
+}
+
+
+//ServerController
+
+//pass list
+	$interfaceTbls["data4printReport"] = array("student_final_result" , "student");
+	$interfaceTbls["data4finalExamResultsPrint"] = array("examresults" , "subject" , "degree");
+	
+//pass list
+	$nextClientInterface["data4printReport"] = "formCertificatePrintForm";
+	$nextClientInterface["data4finalExamResultsPrint"] = "formCertificatePrintForm";
+	
+//pass list
+	if($_POST['interface']=="data4printReport"){
+			$getSQL["data4printReport"] = "SELECT distinct t1.studentNo AS printStudentNo,
+											t2.studentName as printStudentName,
+											t1.degreeCode,
+											t1.semester AS printsemester, 
+											t1.achedamicYear  as printYear,
+											t1.finalGPA,
+											t1.finalResult,
+											t2.medium as printMedium
+											FROM student_final_result as t1 left join student as t2 on 	t1.studentNo = t2.studentNo WHERE
+											t1.degreeCode = '".$_POST['degreeCode']."' AND 
+											t1.achedamicYear = '".$_POST['AchademicYear']."'
+											ORDER BY t1.studentNo, t1.semester;";
+	}
+	
+
+	if($_POST['interface']=='data4finalExamResultsPrint'){
+		$getSQL["data4finalExamResultsPrint"] = "SELECT distinct r.SudentNo, r.StudentName, r.achedamicYear, r.subjectName, s.subjectTitle, s.subjectSemester, r.Examiner1, r.Examiner2, r.Marks,r.Grade, st.degreeTitle
+												FROM examresults r, subject s, degree st
+												WHERE 	r.subjectName = s.subjectCode AND
+												r.degreeCode=s.degreeCode AND
+												r.degreeCode = st.degreeCode AND
+												r.degreeCode = '".$_POST['degreeCode']."' AND 
+												r.achedamicYear = '".$_POST['AchademicYear']."'				
+												ORDER BY r.SudentNo, s.subjectSemester, r.subjectName;";
+	}
+
+
+//clientController
+
+		var printStudNoArr = new Array();
+		var printsemArr = new Array();
+		var printGPAArr = new Array();
+		var printResultArr = new Array();
+		var printStuNameArr = new Array();
+		var printYearArr = new Array();
+		var printDegreeCodeArr = new Array();
+		var printstudentMediumArr = new Array();
+		var PrintsubjectNameArr = new Array();
+		var PrintsubjectTitleArr = new Array();
+		var PrintdegreeTitleArr = new Array();
+		var PrintExm1Arr = new Array();
+		var PrintExm2Arr = new Array();
+		var PrintMarksArr = new Array();
+		var PrintGradeArr  = new Array();
+		var PrintsubjectSemArr = new Array();
+		var PrintsubjectYearArr = new Array();
+		var pr_Length=0;
+		var cer_StudNoArr =new Array();
+		var cer_StuNameArr =new Array();
+		var printMediumArr =new Array();
+
+		loadjsfile("certificatePrint.js");
+
+		str += formCertificatePrintForm(dsp);
+		
+		
+		
+		if(xml.getElementsByTagName("record")[i].getAttribute("SudentNo") != null && clientInterface == "formCertificatePrintForm"){
+				
+				cer_StudNoArr[studentNoLength]= xml.getElementsByTagName("record")[i].getAttribute("SudentNo");
+				cer_StuNameArr[studentNoLength]= xml.getElementsByTagName("record")[i].getAttribute("StudentName");
+				
+				PrintsubjectNameArr[studentNoLength] = xml.getElementsByTagName("record")[i].getAttribute("subjectName");
+				PrintsubjectTitleArr[studentNoLength] = xml.getElementsByTagName("record")[i].getAttribute("subjectTitle");
+				PrintsubjectSemArr[studentNoLength] = xml.getElementsByTagName("record")[i].getAttribute("subjectSemester");
+				PrintsubjectYearArr[studentNoLength] = xml.getElementsByTagName("record")[i].getAttribute("achedamicYear");
+				PrintGradeArr[studentNoLength] = xml.getElementsByTagName("record")[i].getAttribute("Grade");	
+				PrintExm1Arr[studentNoLength] = xml.getElementsByTagName("record")[i].getAttribute("Examiner1");
+				PrintExm2Arr[studentNoLength]= xml.getElementsByTagName("record")[i].getAttribute("Examiner2"); 
+				PrintMarksArr[studentNoLength]= xml.getElementsByTagName("record")[i].getAttribute("Marks");				
+				PrintdegreeTitleArr[studentNoLength] = xml.getElementsByTagName("record")[i].getAttribute("degreeTitle");
+				
+				studentNoLength++;
+			}
+			
+			
+			
+			if(xml.getElementsByTagName("record")[i].getAttribute("printStudentNo") != null && clientInterface == "formCertificatePrintForm"){
+				
+				printStudNoArr[pr_Length]= xml.getElementsByTagName("record")[i].getAttribute("printStudentNo");
+				printStuNameArr[pr_Length]= xml.getElementsByTagName("record")[i].getAttribute("printStudentName");	
+				printDegreeCodeArr[pr_Length]= xml.getElementsByTagName("record")[i].getAttribute("degreeCode");
+				printYearArr[pr_Length]= xml.getElementsByTagName("record")[i].getAttribute("printYear");
+				printsemArr[pr_Length]= xml.getElementsByTagName("record")[i].getAttribute("printsemester");
+				printGPAArr[pr_Length]= xml.getElementsByTagName("record")[i].getAttribute("finalGPA");
+				printResultArr[pr_Length]= xml.getElementsByTagName("record")[i].getAttribute("finalResult");
+				printMediumArr[pr_Length]= xml.getElementsByTagName("record")[i].getAttribute("printMedium");
+				
+				pr_Length++;
+			}
+			
+			
+//sendForm
+
+
+			if(frm=='data4printReport'){
+				dataStr += "&degreeCode="	+dataRep["degCode"];
+				dataStr += "&AchademicYear="+dataRep["acYear"];
+				dataStr += "&degreeTitle="+dataRep["degTitle"];
+			}
+			
+			if(frm=='data4finalExamResultsPrint'){
+				dataStr += "&degreeCode="	+dataRep["degCode"];
+				dataStr += "&AchademicYear="+dataRep["acYear"];
+				dataStr += "&degreeTitle="+dataRep["degTitle"];
+			}
+			
